@@ -30,7 +30,7 @@ class MLMDataset(Dataset):
         self.years = list(data.year)
         self.months = list(data.month)
         self.days = list(data.day)
-
+        print('passed some list transition')
         if name == 'reddit':
             self.times = list(data.month.apply(convert_times, name=name))
         elif name == 'arxiv' or name == 'ciao' or name == 'yelp':
@@ -50,11 +50,15 @@ class MLMDataset(Dataset):
         w_top = sorted(w_counts.keys(), key=lambda x: w_counts[x], reverse=True)[:100000]
         filter_list = [w for w in w_top if w not in stops and w in self.tok.vocab and w.isalpha()]
         self.filter_tensor = torch.tensor([t for t in self.tok.encode(filter_list) if t >= 2100])
+        print('done encoding')
 
+        print('pre reviews')
         self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
         self.reviews = truncate(self.reviews)
 
+        print('pre-load external data')
         self.user2id, self.graph_data = load_external_data(name, social_dim, data_dir)
+        print('done init')
 
     def __len__(self):
         return len(self.reviews)

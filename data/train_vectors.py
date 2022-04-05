@@ -16,8 +16,8 @@ def main():
     with open('yelp_users.p', 'rb') as f:
         users = pickle.load(f)
 
-    assert len(edge_set) == 223254
-    assert len(users) == 5203
+    # assert len(edge_set) == 223254
+    # assert len(users) == 5203
 
     graph = nx.DiGraph()
     graph.add_nodes_from(users)
@@ -27,7 +27,7 @@ def main():
     assert graph.number_of_edges() == len(edge_set)
 
     n2v = Node2Vec(graph, dimensions=args.dim, walk_length=80, num_walks=10, workers=1)
-    n2v_model = n2v.fit(window=2, min_count=1, iter=10, seed=123)
+    n2v_model = n2v.fit(window=2, min_count=1, epochs=10, seed=123)
 
     n2v_model.wv.save_word2vec_format('yelp_vectors_{}.txt'.format(args.dim), binary=False)
 

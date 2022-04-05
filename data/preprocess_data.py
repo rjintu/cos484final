@@ -46,7 +46,8 @@ def main():
 
     data.reset_index(inplace=True, drop=True)
 
-    assert data.shape[0] == 795661
+    print(data.shape[0])
+    #assert data.shape[0] == 795661
 
     data = data[['user', 'time', 'year', 'month', 'day', 'text', 'rating', 'label']]
 
@@ -56,6 +57,14 @@ def main():
     train.to_csv('yelp_train.csv', index=False)
     dev.to_csv('yelp_dev.csv', index=False)
     test.to_csv('yelp_test.csv', index=False)
+
+    # # rohan addition
+    # temp = []
+    # names = {'train', 'dev', 'test'}
+    # for name in names:
+    #     out = pd.read_csv(f'yelp_{name}.csv')
+    #     temp.append(out)
+    # data = pd.concat(temp)
 
     edge_set = set()
     users = set(data.user)
@@ -67,8 +76,10 @@ def main():
 
         edge_set.update([(u, f) for u, fs in zip(c_users, c_friends) for f in fs if u in users and f in users])
 
-    assert len(edge_set) == 223254
-    assert len(users) == 5203
+    print(len(edge_set))
+    print(len(users))
+    # assert len(edge_set) == 223254
+    # assert len(users) == 5203
 
     with open('yelp_edges.p', 'wb') as f:
         pickle.dump(edge_set, f)

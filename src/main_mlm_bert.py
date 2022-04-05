@@ -28,16 +28,17 @@ def main():
     parser.add_argument('--n_epochs', default=None, type=int, required=True, help='Number of epochs.')
     parser.add_argument('--device', default=None, type=int, required=True, help='Selected CUDA device.')
     parser.add_argument('--data', default=None, type=str, required=True, help='Name of data.')
+    parser.add_argument('--dim', default=50, type=int, required=True, help='Dimension of embeddings.')
     args = parser.parse_args()
 
     print('Load training data...')
-    with open('{}/mlm_{}_50_train.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/mlm_{}_{}_train.p'.format(args.data_dir, args.data, args.dim), 'rb') as f:
         train_dataset = pickle.load(f)
     print('Load development data...')
-    with open('{}/mlm_{}_50_dev.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/mlm_{}_{}_dev.p'.format(args.data_dir, args.data, args.dim), 'rb') as f:
         dev_dataset = pickle.load(f)
     print('Load test data...')
-    with open('{}/mlm_{}_50_test.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/mlm_{}_{}_test.p'.format(args.data_dir, args.data, args.dim), 'rb') as f:
         test_dataset = pickle.load(f)
 
     collator = MLMCollator(train_dataset.user2id, train_dataset.tok)
@@ -83,7 +84,7 @@ def main():
 
             embs = emb_layer(reviews)
 
-            loss = model(inputs_embeds=embs, attention_mask=masks, token_type_ids=segs, masked_lm_labels=labels)[0]
+            loss = model(inputs_embeds=embs, attention_mask=masks, token_type_ids=segs, labels=labels)[0]
 
             loss.backward()
             optimizer.step()
