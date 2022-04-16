@@ -100,7 +100,7 @@ class MLMModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        output = self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs, masked_lm_labels=labels)
+        output = self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs, labels=labels)
 
         return offset_last, offset_now, output[0]
 
