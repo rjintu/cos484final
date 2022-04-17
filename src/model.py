@@ -127,7 +127,7 @@ class SAModel(nn.Module):
         if model == 'gpt2':
             self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
             self.bert_emb_layer = self.bert.get_input_embeddings()
-            self.linear_1 = nn.Linear(50257)
+            self.linear_1 = nn.Linear(50257, 100)
 
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_2 = nn.Linear(100, 1)
