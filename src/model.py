@@ -167,8 +167,8 @@ class SAModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        print(self.bert)
-        # print(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
+        # print(self.bert)
+        print(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1].dtype)
         output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
