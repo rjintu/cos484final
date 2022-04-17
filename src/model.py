@@ -3,7 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import BertModel, BertForMaskedLM
-from transformers import GPT2Model
+from transformers import GPT2Model, GPT2LMHeadModel
 
 from data_helpers import isin
 
@@ -124,7 +124,7 @@ class SAModel(nn.Module):
             self.bert = BertModel.from_pretrained('bert-base-uncased')
             self.bert_emb_layer = self.bert.get_input_embeddings()
         if model == 'gpt2':
-            self.bert = GPT2Model.from_pretrained('gpt2')
+            self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
             self.bert_emb_layer = self.bert.get_input_embeddings()
 
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
@@ -168,7 +168,7 @@ class SAModel(nn.Module):
 
         # Pass through contextualizing component
         print(self.bert)
-        print(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
+        # print(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
         output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
