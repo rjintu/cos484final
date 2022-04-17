@@ -80,7 +80,7 @@ class SADataset(Dataset):
 
     def __init__(self, name, split, social_dim, data_dir):
 
-        self.tok = RobertaTokenizer.from_pretrained('roberta-uncased')
+        self.tok = RobertaTokenizer.from_pretrained('roberta-base')
 
         data = pd.read_csv('{}/{}_{}.csv'.format(data_dir, name, split), parse_dates=['time'])
 
