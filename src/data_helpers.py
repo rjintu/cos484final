@@ -108,7 +108,7 @@ class SADataset(Dataset):
             for w in vocab[time]:
                 w_counts[w] = w_counts.get(w, 0) + vocab[time][w]
         w_top = sorted(w_counts.keys(), key=lambda x: w_counts[x], reverse=True)[:100000]
-        filter_list = [w for w in w_top if w not in stops and w in self.tok.vocab and w.isalpha()]
+        filter_list = [w for w in w_top if w not in stops and w in self.tok.get_vocab() and w.isalpha()]
         self.filter_tensor = torch.tensor([t for t in self.tok.encode(filter_list) if t >= 2100])
 
         self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
