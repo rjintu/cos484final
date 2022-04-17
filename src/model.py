@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
-from transformers import BertModel, BertForMaskedLM
+from transformers import XLNetModel, BertForMaskedLM
 
 from data_helpers import isin
 
@@ -119,7 +119,7 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = XLNetModel.from_pretrained('xlnet-base-cased')
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
@@ -234,7 +234,7 @@ class SABert(nn.Module):
 
     def __init__(self):
         super(SABert, self).__init__()
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = XLNetModel.from_pretrained('xlnet-base-cased')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
