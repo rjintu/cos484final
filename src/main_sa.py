@@ -37,13 +37,13 @@ def main():
     args = parser.parse_args()
 
     print('Load training data...')
-    with open('{}/sa_{}_{}_train.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
+    with open('{}/sa_{}_{}_train_{}.p'.format(args.data_dir, args.data, args.social_dim, args.model), 'rb') as f:
         train_dataset = pickle.load(f)
     print('Load development data...')
-    with open('{}/sa_{}_{}_dev.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
+    with open('{}/sa_{}_{}_dev_{}.p'.format(args.data_dir, args.data, args.social_dim, args.model), 'rb') as f:
         dev_dataset = pickle.load(f)
     print('Load test data...')
-    with open('{}/sa_{}_{}_test.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
+    with open('{}/sa_{}_{}_test_{}.p'.format(args.data_dir, args.data, args.social_dim, args.model), 'rb') as f:
         test_dataset = pickle.load(f)
 
     print('Lambda a: {:.0e}'.format(args.lambda_a))
