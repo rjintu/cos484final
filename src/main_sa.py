@@ -33,6 +33,7 @@ def main():
     parser.add_argument('--data', default=None, type=str, required=True, help='Name of data.')
     parser.add_argument('--social_dim', default=0, type=int, help='Size of social embeddings.')
     parser.add_argument('--gnn', default=None, type=str, help='Type of graph neural network.')
+    parser.add_argument('--model', default='bert', type=str, help='specify model used')
     args = parser.parse_args()
 
     print('Load training data...')
@@ -63,6 +64,7 @@ def main():
     device = torch.device('cuda:{}'.format(args.device) if torch.cuda.is_available() else 'cpu')
 
     model = SAModel(
+        model = args.model,
         n_times=train_dataset.n_times,
         social_dim=args.social_dim,
         gnn=args.gnn

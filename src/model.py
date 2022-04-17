@@ -3,6 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import BertModel, BertForMaskedLM
+from transformers import GPT2Model
 
 from data_helpers import isin
 
@@ -108,7 +109,7 @@ class MLMModel(nn.Module):
 class SAModel(nn.Module):
     """"Class to train dynamic contextualized word embeddings for sentiment analysis."""
 
-    def __init__(self, n_times=1, social_dim=50, gnn=None):
+    def __init__(self, model, n_times=1, social_dim=50, gnn=None):
         """Initialize dynamic contextualized word embeddings model.
 
         Args:
@@ -119,8 +120,13 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
-        self.bert_emb_layer = self.bert.get_input_embeddings()
+        if model == 'bert':
+            self.bert = BertModel.from_pretrained('bert-base-uncased')
+            self.bert_emb_layer = self.bert.get_input_embeddings()
+        if model == 'gpt2':
+            self.bert = GPT2Model.from_pretrained('gpt2')
+            self.bert_emb_layer = self.bert.get_input_embeddings()
+
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
