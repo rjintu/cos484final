@@ -130,7 +130,7 @@ class SAModel(nn.Module):
             self.linear_1 = nn.Linear(50257, 100)
 
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
-        self.linear_2 = nn.Linear(100, 1)
+        self.linear_2 = nn.Linear(100, 4)
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, reviews, masks, segs, users, g_data, times, vocab_filter, embs_only=False):
