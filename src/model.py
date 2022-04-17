@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
-from transformers import BertModel, BertForMaskedLM
+from transformers import RobertaModel, RobertaForMaskedLM
 
 from data_helpers import isin
 
@@ -28,7 +28,7 @@ class MLMModel(nn.Module):
         self.time_only = time_only
 
         # Contextualizing component
-        self.bert = BertForMaskedLM.from_pretrained('bert-base-uncased')
+        self.bert = RobertaForMaskedLM.from_pretrained('roberta-base')
         self.bert_emb_layer = self.bert.get_input_embeddings()
 
         # Dynamic component
@@ -100,7 +100,7 @@ class MLMModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        output = self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs, masked_lm_labels=labels)
+        output = self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs, labels=labels)
 
         return offset_last, offset_now, output[0]
 
@@ -119,7 +119,7 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = RobertaModel.from_pretrained('roberta-base')
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)

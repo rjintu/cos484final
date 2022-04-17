@@ -8,7 +8,7 @@ import torch
 from nltk.corpus import stopwords
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
-from transformers import BertTokenizer
+from transformers import RobertaTokenizer
 
 stops = set(stopwords.words('english'))
 
@@ -18,7 +18,7 @@ class MLMDataset(Dataset):
 
     def __init__(self, name, split, social_dim, data_dir):
 
-        self.tok = BertTokenizer.from_pretrained('bert-base-uncased')
+        self.tok = RobertaTokenizer.from_pretrained('roberta-base')
 
         data = pd.read_csv('{}/{}_{}.csv'.format(data_dir, name, split), parse_dates=['time'])
 
@@ -80,7 +80,7 @@ class SADataset(Dataset):
 
     def __init__(self, name, split, social_dim, data_dir):
 
-        self.tok = BertTokenizer.from_pretrained('bert-base-uncased')
+        self.tok = RobertaTokenizer.from_pretrained('roberta-uncased')
 
         data = pd.read_csv('{}/{}_{}.csv'.format(data_dir, name, split), parse_dates=['time'])
 
