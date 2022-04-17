@@ -123,12 +123,13 @@ class SAModel(nn.Module):
         if model == 'bert':
             self.bert = BertModel.from_pretrained('bert-base-uncased')
             self.bert_emb_layer = self.bert.get_input_embeddings()
+            self.linear_1 = nn.Linear(768, 100)
         if model == 'gpt2':
             self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
             self.bert_emb_layer = self.bert.get_input_embeddings()
+            self.linear_1 = nn.Linear(50257)
 
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
-        self.linear_1 = nn.Linear(50257, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
 
