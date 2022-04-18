@@ -143,7 +143,7 @@ class SAModel(nn.Module):
 
         # Retrieve BERT input embeddings
         bert_embs = self.bert_emb_layer(reviews)
-        print(bert_embs.shape)
+        # print(bert_embs.shape)
         offset_last = torch.cat(
             [self.social_components[j](bert_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
@@ -154,7 +154,7 @@ class SAModel(nn.Module):
         )
         offset_last = offset_last * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
         offset_now = offset_now * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
-        print(offset_now.shape)
+        # print(offset_now.shape)
 
         # Compute dynamic type-level embeddings (input to contextualizing component)
         input_embs = bert_embs + offset_now
@@ -164,7 +164,7 @@ class SAModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        print((self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[0][:,0,:]).shape)
+        # print((self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[0][:,0,:]).shape)
         output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[0][:,0,:])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
