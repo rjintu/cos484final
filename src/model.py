@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
-from transformers import GPT2LMHeadModel
+from transformers import RobertaModel
 
 from data_helpers import isin
 
@@ -27,7 +27,7 @@ class MLMModel(nn.Module):
         self.time_only = time_only
 
         # Contextualizing component
-        self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
+        self.bert = RobertaModel.from_pretrained('roberta-base')
         self.bert_emb_layer = self.bert.get_input_embeddings()
 
         # Dynamic component
@@ -116,7 +116,7 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
+        self.bert = RobertaModel.from_pretrained('roberta-base')
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(50257, 100)
