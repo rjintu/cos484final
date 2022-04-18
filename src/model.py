@@ -173,7 +173,7 @@ class SAModel(nn.Module):
         # print(str(res))
         output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
-        output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
+        output = torch.sigmoid(self.linear_2(h))
 
         return offset_last, offset_now, output
 
