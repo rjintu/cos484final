@@ -3,6 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import RobertaModel, RobertaForMaskedLM
+from transformers import GPT2LMHeadModel
 
 from data_helpers import isin
 
@@ -119,10 +120,10 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = RobertaModel.from_pretrained('roberta-base')
+        self.bert = GPT2LMHeadModel.from_pretrained('roberta-base')
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
-        self.linear_1 = nn.Linear(768, 100)
+        self.linear_1 = nn.Linear(50257, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
 
@@ -161,7 +162,7 @@ class SAModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
+        output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[0])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
 
