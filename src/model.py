@@ -3,7 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import RobertaModel, RobertaForMaskedLM
-from transformers import GPT2LMHeadModel, GPTModel
+from transformers import GPT2LMHeadModel, GPT2Model
 
 from data_helpers import isin
 
