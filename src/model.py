@@ -2,8 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
-from transformers import BertModel, BertForMaskedLM
-from transformers import GPT2Model, GPT2LMHeadModel
+from transformers import GPT2LMHeadModel
 
 from data_helpers import isin
 
@@ -11,9 +10,8 @@ from data_helpers import isin
 class MLMModel(nn.Module):
     """"Class to train dynamic contextualized word embeddings with masked language modeling."""
 
-    def __init__(self, n_times=1, social_dim=50, gnn=None, social_only=False, time_only=False):
+    def __init__(self, model, n_times=1, social_dim=50, gnn=None, social_only=False, time_only=False):
         """Initialize dynamic contextualized word embeddings model.
-
         Args:
             n_times: number of time points (only relevant if time is not ablated)
             social_dim: dimensionality of social embeddings
@@ -29,7 +27,7 @@ class MLMModel(nn.Module):
         self.time_only = time_only
 
         # Contextualizing component
-        self.bert = BertForMaskedLM.from_pretrained('bert-base-uncased')
+        self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
         self.bert_emb_layer = self.bert.get_input_embeddings()
 
         # Dynamic component
@@ -42,14 +40,13 @@ class MLMModel(nn.Module):
 
     def forward(self, labels, reviews, masks, segs, users, g_data, times, vocab_filter, embs_only=False):
         """Perform forward pass.
-
         Args:
             labels: tensor of masked language modeling labels
             reviews: tensor of tokenized reviews
             masks: tensor of attention masks
             segs: tensor of segment indices
             users: tensor of batch user indices
-            g_data: graph data object31
+            g_data: graph data object
             times: tensor of batch time points
             vocab_filter: tensor with word types for dynamic component
             embs_only: only compute dynamic type-level embeddings
@@ -111,7 +108,6 @@ class SAModel(nn.Module):
 
     def __init__(self, model, n_times=1, social_dim=50, gnn=None):
         """Initialize dynamic contextualized word embeddings model.
-
         Args:
             n_times: number of time points
             social_dim: dimensionality of social embeddings
@@ -120,22 +116,15 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        if model == 'bert':
-            self.bert = BertModel.from_pretrained('bert-base-uncased')
-            self.bert_emb_layer = self.bert.get_input_embeddings()
-            self.linear_1 = nn.Linear(768, 100)
-        if model == 'gpt2':
-            self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
-            self.bert_emb_layer = self.bert.get_input_embeddings()
-            self.linear_1 = nn.Linear(50257, 100)
-
+        self.bert = GPT2LMHeadModel.from_pretrained('gpt2')
+        self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
+        self.linear_1 = nn.Linear(50257, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, reviews, masks, segs, users, g_data, times, vocab_filter, embs_only=False):
         """Perform forward pass.
-
         Args:
             reviews: tensor of tokenized reviews
             masks: tensor of attention masks
@@ -168,12 +157,9 @@ class SAModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        # print(self.bert)
-        # res = type(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[0])
-        # print(str(res))
-        output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
+        output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[0])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
-        output = torch.sigmoid(self.linear_2(h))
+        output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
 
         return offset_last, offset_now, output
 
