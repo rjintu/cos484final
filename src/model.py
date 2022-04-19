@@ -28,7 +28,7 @@ class MLMModel(nn.Module):
         self.time_only = time_only
 
         # Contextualizing component
-        self.bert = BertForMaskedLM.from_pretrained('bert-tiny')
+        self.bert = BertForMaskedLM.from_pretrained('distilbert-base-uncased')
         self.bert_emb_layer = self.bert.get_input_embeddings()
 
         # Dynamic component
@@ -119,7 +119,7 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = BertModel.from_pretrained('bert-tiny')
+        self.bert = BertModel.from_pretrained('distilbert-base-uncased')
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
@@ -234,7 +234,7 @@ class SABert(nn.Module):
 
     def __init__(self):
         super(SABert, self).__init__()
-        self.bert = BertModel.from_pretrained('bert-tiny')
+        self.bert = BertModel.from_pretrained('distilbert-base-uncased')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
