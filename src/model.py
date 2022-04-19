@@ -4,6 +4,7 @@ from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import RobertaModel, RobertaForMaskedLM
 from transformers import GPT2LMHeadModel, GPT2Model
+from transformers import AutoModel
 
 from data_helpers import isin
 
@@ -120,7 +121,7 @@ class SAModel(nn.Module):
 
         super(SAModel, self).__init__()
 
-        self.bert = GPT2Model.from_pretrained('gpt2')
+        self.bert = GPT2Model.from_pretrained('distilgpt2')
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
