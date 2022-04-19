@@ -87,6 +87,8 @@ def main():
 
         model.train()
 
+        print(len(train_loader))
+        print(args.batch_size)
         for i, batch in enumerate(train_loader):
 
             if i % 1000 == 0:
