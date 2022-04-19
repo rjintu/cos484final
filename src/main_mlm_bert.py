@@ -51,7 +51,7 @@ def main():
 
     device = torch.device('cuda:{}'.format(args.device) if torch.cuda.is_available() else 'cpu')
 
-    model = BertForMaskedLM.from_pretrained('distilbert-base-uncased').to(device)
+    model = BertForMaskedLM.from_pretrained('prajjwal1/bert-tiny').to(device)
     emb_layer = model.get_input_embeddings().to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)

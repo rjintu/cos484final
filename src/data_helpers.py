@@ -18,7 +18,7 @@ class MLMDataset(Dataset):
 
     def __init__(self, name, split, social_dim, data_dir):
 
-        self.tok = BertTokenizer.from_pretrained('distilbert-base-uncased')
+        self.tok = BertTokenizer.from_pretrained('prajjwal1/bert-tiny')
 
         data = pd.read_csv('{}/{}_{}.csv'.format(data_dir, name, split), parse_dates=['time'])
 
@@ -80,7 +80,7 @@ class SADataset(Dataset):
 
     def __init__(self, name, split, social_dim, data_dir):
 
-        self.tok = BertTokenizer.from_pretrained('distilbert-base-uncased')
+        self.tok = BertTokenizer.from_pretrained('prajjwal1/bert-tiny')
 
         data = pd.read_csv('{}/{}_{}.csv'.format(data_dir, name, split), parse_dates=['time'])
 
