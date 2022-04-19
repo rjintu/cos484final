@@ -10,7 +10,7 @@ from data_helpers import isin
 class MLMModel(nn.Module):
     """"Class to train dynamic contextualized word embeddings with masked language modeling."""
 
-    def __init__(self, n_times=1, social_dim=50, gnn=None, social_only=False, time_only=False):
+    def __init__(self, model, n_times=1, social_dim=50, gnn=None, social_only=False, time_only=False):
         """Initialize dynamic contextualized word embeddings model.
 
         Args:
@@ -108,7 +108,7 @@ class MLMModel(nn.Module):
 class SAModel(nn.Module):
     """"Class to train dynamic contextualized word embeddings for sentiment analysis."""
 
-    def __init__(self, n_times=1, social_dim=50, gnn=None):
+    def __init__(self, model, n_times=1, social_dim=50, gnn=None):
         """Initialize dynamic contextualized word embeddings model.
 
         Args:
