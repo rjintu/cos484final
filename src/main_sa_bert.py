@@ -29,16 +29,17 @@ def main():
     parser.add_argument('--n_epochs', default=None, type=int, required=True, help='Number of epochs.')
     parser.add_argument('--device', default=None, type=int, required=True, help='Selected CUDA device.')
     parser.add_argument('--data', default=None, type=str, required=True, help='Name of data.')
+    parser.add_argument('--model', default='bert', type=str, help='specify model used')
     args = parser.parse_args()
 
     print('Load training data...')
-    with open('{}/sa_{}_50_train.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_train_{}.p'.format(args.data_dir, args.data, args.social_dim, args.model), 'rb') as f:
         train_dataset = pickle.load(f)
     print('Load development data...')
-    with open('{}/sa_{}_50_dev.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_dev_{}.p'.format(args.data_dir, args.data, args.social_dim, args.model), 'rb') as f:
         dev_dataset = pickle.load(f)
     print('Load test data...')
-    with open('{}/sa_{}_50_test.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_test_{}.p'.format(args.data_dir, args.data, args.social_dim, args.model), 'rb') as f:
         test_dataset = pickle.load(f)
 
     collator = SACollator(train_dataset.user2id)
