@@ -30,7 +30,7 @@ class MLMModel(nn.Module):
         self.time_only = time_only
 
         # Contextualizing component
-        self.bert = RobertaForMaskedLM.from_pretrained('roberta-base')
+        self.bert = GPT2Model.from_pretrained('distilgpt2')
         self.bert_emb_layer = self.bert.get_input_embeddings()
 
         # Dynamic component
@@ -234,12 +234,12 @@ class OffsetComponent(nn.Module):
         return offset
 
 
-class SABert(nn.Module):
+class SAGPT(nn.Module):
     """"Class to train non-dynamic contextualized word embeddings (BERT) for sentiment analysis."""
 
     def __init__(self):
-        super(SABert, self).__init__()
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        super(SAGPT, self).__init__()
+        self.bert = GPT2Model.from_pretrained('distilgpt2')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)

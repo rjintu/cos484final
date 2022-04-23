@@ -9,7 +9,7 @@ from torch import optim, nn
 from torch.utils.data import DataLoader
 
 from data_helpers import *
-from model import SAModel
+from model import SAGPT
 
 
 def main():
@@ -53,7 +53,7 @@ def main():
 
     device = torch.device('cuda:{}'.format(args.device) if torch.cuda.is_available() else 'cpu')
 
-    model = SAModel(model=args.model,
+    model = SAGPT(model=args.model,
                     n_times=train_dataset.n_times,
                     social_dim=args.dim).to(device)
 
