@@ -2,7 +2,6 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
-from transformers import RobertaModel, RobertaForMaskedLM
 from transformers import GPT2LMHeadModel, GPT2Model
 from transformers import AutoModel
 
@@ -245,7 +244,7 @@ class SAGPT(nn.Module):
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, reviews, masks, segs):
-        output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
+        output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[0][:,0,:])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
         return output
