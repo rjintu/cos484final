@@ -53,9 +53,7 @@ def main():
 
     device = torch.device('cuda:{}'.format(args.device) if torch.cuda.is_available() else 'cpu')
 
-    model = SAGPT(model=args.model,
-                    n_times=train_dataset.n_times,
-                    social_dim=args.dim).to(device)
+    model = SAGPT().to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     criterion = nn.BCELoss()
