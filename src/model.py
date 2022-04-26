@@ -120,7 +120,7 @@ class SAModel(nn.Module):
         super(SAModel, self).__init__()
 
         self.bert = BertModel(BertConfig.from_pretrained('distilbert-base-uncased'))
-        self.bert.load_state_dict(torch.load('/content/drive/MyDrive/cos484final/models/sa_yelp_768_bert-tiny_1.torch'))
+        self.bert.load_state_dict(torch.load('/content/drive/MyDrive/cos484final/models/sa_yelp_768_bert-tiny_1_old.torch'))
         self.bert_emb_layer = self.bert.get_input_embeddings()
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
