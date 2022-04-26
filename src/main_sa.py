@@ -13,6 +13,7 @@ from model import SAModel
 
 
 def main():
+    print("a")
 
     logging.disable(logging.WARNING)
 
