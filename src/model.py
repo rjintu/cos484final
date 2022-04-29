@@ -229,12 +229,12 @@ class OffsetComponent(nn.Module):
         return offset
 
 
-class SABert(nn.Module):
+class SARoberta(nn.Module):
     """"Class to train non-dynamic contextualized word embeddings (BERT) for sentiment analysis."""
 
     def __init__(self):
-        super(SABert, self).__init__()
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        super(SARoberta, self).__init__()
+        self.bert = RobertaModel.from_pretrained('roberta-base')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)

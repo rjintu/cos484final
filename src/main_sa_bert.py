@@ -9,7 +9,7 @@ from torch import optim, nn
 from torch.utils.data import DataLoader
 
 from data_helpers import *
-from model import SABert
+from model import SARoberta
 
 
 def main():
@@ -29,16 +29,20 @@ def main():
     parser.add_argument('--n_epochs', default=None, type=int, required=True, help='Number of epochs.')
     parser.add_argument('--device', default=None, type=int, required=True, help='Selected CUDA device.')
     parser.add_argument('--data', default=None, type=str, required=True, help='Name of data.')
+    parser.add_argument('--model', default='bert',
+                        type=str, help='specify model used')
+    parser.add_argument('--dim', default=None, type=int,
+                        required=True, help='Dimension')
     args = parser.parse_args()
 
     print('Load training data...')
-    with open('{}/sa_{}_50_train.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_train_{}.p'.format(args.data_dir, args.data, args.dim, args.model), 'rb') as f:
         train_dataset = pickle.load(f)
     print('Load development data...')
-    with open('{}/sa_{}_50_dev.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_dev_{}.p'.format(args.data_dir, args.data, args.dim, args.model), 'rb') as f:
         dev_dataset = pickle.load(f)
     print('Load test data...')
-    with open('{}/sa_{}_50_test.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_test_{}.p'.format(args.data_dir, args.data, args.dim, args.model), 'rb') as f:
         test_dataset = pickle.load(f)
 
     collator = SACollator(train_dataset.user2id)
@@ -47,11 +51,11 @@ def main():
     dev_loader = DataLoader(dev_dataset, batch_size=args.batch_size, collate_fn=collator)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, collate_fn=collator)
 
-    filename = 'sa_{}_bert'.format(args.data)
+    filename = 'sa_{}_roberta'.format(args.data)
 
     device = torch.device('cuda:{}'.format(args.device) if torch.cuda.is_available() else 'cpu')
 
-    model = SABert().to(device)
+    model = SARoberta().to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     criterion = nn.BCELoss()
