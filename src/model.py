@@ -3,6 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import BertModel, BertForMaskedLM
+from gensim.models import Word2Vec
 
 from data_helpers import isin
 
@@ -118,6 +119,8 @@ class SAModel(nn.Module):
         """
 
         super(SAModel, self).__init__()
+        #model = Word2Vec.load("word2vec.model")
+        #word_vectors = model.wv
 
         self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.bert_emb_layer = self.bert.get_input_embeddings()
@@ -139,6 +142,7 @@ class SAModel(nn.Module):
             vocab_filter: tensor with word types for dynamic component
             embs_only: only compute dynamic type-level embeddings
         """
+
 
         # Retrieve BERT input embeddings
         bert_embs = self.bert_emb_layer(reviews)
