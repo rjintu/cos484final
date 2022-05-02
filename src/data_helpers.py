@@ -122,6 +122,8 @@ class SADataset(Dataset):
                 for tok in utils.simple_preprocess(tokens):
                     review_tokens.append(tok)
 
+        print("Henriqueee: ")
+        print(review_tokens[:10])
         self.reviews = review_tokens
 
         self.user2id, self.graph_data = load_external_data(name, social_dim, data_dir)
