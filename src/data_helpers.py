@@ -118,7 +118,7 @@ class SADataset(Dataset):
         review_tokens = []
         for reviews in data.text:
             for rev in reviews:
-                tokens = rev.lower().replace('!', ' ').replace('?', ' ').replace('.', ' ').split(' ')
+                tokens = rev.lower().replace('!', ' ').replace('?', ' ').replace('.', ' ')
                 for tok in utils.simple_preprocess(tokens):
                     review_tokens.append(tok)
 
