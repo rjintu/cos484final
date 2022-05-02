@@ -217,7 +217,7 @@ class SACollator:
         segs_pad = torch.zeros((batch_size, max_len)).long()
 
         for i, r in enumerate(reviews):
-            reviews_pad[i, :len(r)] = torch.tensor(r)
+            reviews_pad[i, :len(r)] = r
             masks_pad[i, :len(r)] = 1
 
         return labels, users, times, years, months, days, reviews_pad, masks_pad, segs_pad
