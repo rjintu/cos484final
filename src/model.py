@@ -147,9 +147,10 @@ class SAModel(nn.Module):
         for rev in reviews:
             rev_embs = torch.tensor([self.vecs[tok] for tok in tokenizer.convert_ids_to_tokens(ids=rev) if tok in self.vecs])
             if i == 0:
-                w2v_embs = torch.tensor()
+                w2v_embs = rev_embs
                 i += 1
-            w2v_embs = torch.cat((w2v_embs, rev_embs), 0)
+            else:
+                w2v_embs = torch.cat((w2v_embs, rev_embs), 0)
         offset_last = torch.cat(
             [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
