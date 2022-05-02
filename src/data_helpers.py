@@ -121,7 +121,7 @@ class SADataset(Dataset):
             individual_review_tokens = []
             for tok in processed_review:
                 individual_review_tokens.append(tok)
-            review_tokens.append[individual_review_tokens]
+            review_tokens.append(individual_review_tokens)
 
         self.reviews = review_tokens
 
