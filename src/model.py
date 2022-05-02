@@ -140,7 +140,7 @@ class SAModel(nn.Module):
             embs_only: only compute dynamic type-level embeddings
         """
 
-
+        print(reviews.shape)
         # Retrieve BERT input embeddings
         tokenizer = BertTokenizer.from_pretrained('distilbert-base-uncased')
         w2v_embs = [self.vecs[tok] for tok in tokenizer.convert_ids_to_tokens(ids=reviews)]
