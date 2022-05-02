@@ -119,11 +119,7 @@ class SAModel(nn.Module):
         """
 
         super(SAModel, self).__init__()
-        #model = Word2Vec.load("word2vec.model")
-        #word_vectors = model.wv
-
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
-        self.bert_emb_layer = self.bert.get_input_embeddings()
+        self.vecs = Word2Vec.load("word2vec.model").wv
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
@@ -145,7 +141,7 @@ class SAModel(nn.Module):
 
 
         # Retrieve BERT input embeddings
-        bert_embs = self.bert_emb_layer(reviews)
+        bert_embs = torch.tensor([self.vecs[tok] for tok in reviews])
         offset_last = torch.cat(
             [self.social_components[j](bert_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
@@ -165,7 +161,7 @@ class SAModel(nn.Module):
             return bert_embs, input_embs
 
         # Pass through contextualizing component
-        output_bert = self.dropout(self.bert(inputs_embeds=input_embs, attention_mask=masks, token_type_ids=segs)[1])
+        output_bert = self.dropout(input_embs)
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
 
