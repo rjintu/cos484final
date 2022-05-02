@@ -22,7 +22,7 @@ def main():
             dataset_split = MLMDataset(args.data, split=split, social_dim=args.social_dim, data_dir=args.data_dir)
         with open('{}/{}_{}_{}_{}_w2v.p'.format(args.data_dir, args.task, args.data, args.social_dim, split), 'wb') as f:
             print('start')
-            pickle.dump(dataset_split, f)
+            #pickle.dump(dataset_split, f)
             print('end')
 
 
