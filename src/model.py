@@ -142,6 +142,7 @@ class SAModel(nn.Module):
 
         # Retrieve BERT input embeddings
         bert_embs = self.bert_emb_layer(reviews)
+        print(bert_embs.shape)
         offset_last = torch.cat(
             [self.social_components[j](bert_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
