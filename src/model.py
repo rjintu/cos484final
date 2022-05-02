@@ -142,7 +142,8 @@ class SAModel(nn.Module):
 
 
         # Retrieve BERT input embeddings
-        w2v_embs = [self.vecs[tok] for tok in BertTokenizer.convert_ids_to_tokens(ids=reviews)]
+        tokenizer = BertTokenizer.from_pretrained('distilbert-base-uncased')
+        w2v_embs = [self.vecs[tok] for tok in tokenizer.convert_ids_to_tokens(ids=reviews)]
         offset_last = torch.cat(
             [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
