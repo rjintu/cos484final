@@ -119,7 +119,6 @@ class SADataset(Dataset):
         for review in data.text:
             processed_review = utils.simple_preprocess(review.lower().replace('!', ' ').replace('?', ' ').replace('.', ' '))
             for tok in processed_review:
-                print(tok)
                 review_tokens.append(tok)
 
         print("Henriqueee: ")
