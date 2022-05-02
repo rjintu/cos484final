@@ -115,15 +115,24 @@ class SADataset(Dataset):
         #self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
         #self.reviews = truncate(self.reviews)
 
+        prints = 0
         review_tokens = []
-        print("data.text: " + str(len(data.text)))
+        if (prints < 450):
+            print("data.text: " + str(len(data.text)))
+            prints += 1
         for reviews in data.text:
-            print("reviews: " + str(len(reviews)))
+            if (prints < 450):
+                print("reviews: " + str(len(reviews)))
+                prints += 1
             for rev in reviews:
                 tokens = rev.lower().replace('!', ' ').replace('?', ' ').replace('.', ' ')
-                print("tokens: " + str(len(tokens)))
+                if (prints < 450):
+                    print("tokens: " + str(len(tokens)))
+                    prints += 1
                 tokens_list = utils.simple_preprocess(tokens)
-                print("tokens_list: " + str(len(tokens_list)))
+                if (prints < 450):
+                    print("tokens_list: " + str(len(tokens_list)))
+                    prints += 1
                 for tok in tokens_list:
                     review_tokens.append(tok)
 
