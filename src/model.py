@@ -145,7 +145,7 @@ class SAModel(nn.Module):
         tokenizer = BertTokenizer.from_pretrained('distilbert-base-uncased')
         i = 0
         for rev in reviews:
-            rev_embs = torch.tensor([self.vecs[tok] for tok in tokenizer.convert_ids_to_tokens(ids=rev)])
+            rev_embs = torch.tensor([self.vecs[tok] for tok in tokenizer.convert_ids_to_tokens(ids=rev) if tok in self.vecs])
             if i == 0:
                 w2v_embs = torch.tensor()
                 i += 1
