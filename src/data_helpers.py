@@ -5,6 +5,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import torch
+from sklearn import preprocessing
 from nltk.corpus import stopwords
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
@@ -115,15 +116,26 @@ class SADataset(Dataset):
         #self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
         #self.reviews = truncate(self.reviews)
 
+        le = preprocessing.LabelEncoder()
+
+        total_tokens = []
         review_tokens = []
         for review in data.text:
             processed_review = utils.simple_preprocess(review.lower().replace('!', ' ').replace('?', ' ').replace('.', ' '))
             individual_review_tokens = []
             for tok in processed_review:
                 individual_review_tokens.append(tok)
+                total_tokens.append(tok)
             review_tokens.append(individual_review_tokens)
 
-        self.reviews = review_tokens
+        le.fit_transform(total_tokens)
+        final_reviews = []
+        for tok_list in review_tokens:
+            final_reviews.append(le.transform(tok_list))
+
+        self.reviews = final_reviews
+
+        self.encoder = le
 
         self.user2id, self.graph_data = load_external_data(name, social_dim, data_dir)
 
@@ -217,7 +229,7 @@ class SACollator:
         segs_pad = torch.zeros((batch_size, max_len)).long()
 
         for i, r in enumerate(reviews):
-            reviews_pad[i, :len(r)] = r
+            reviews_pad[i, :len(r)] = torch.tensor(r)
             masks_pad[i, :len(r)] = 1
 
         return labels, users, times, years, months, days, reviews_pad, masks_pad, segs_pad

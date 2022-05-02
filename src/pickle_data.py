@@ -20,6 +20,10 @@ def main():
             dataset_split = SADataset(args.data, split=split, social_dim=args.social_dim, data_dir=args.data_dir)
         elif args.task == 'mlm':
             dataset_split = MLMDataset(args.data, split=split, social_dim=args.social_dim, data_dir=args.data_dir)
+        with open('{}/{}_{}_{}_{}_encoder.p'.format(args.data_dir, args.task, args.data, args.social_dim, split), 'wb') as f:
+            print('start')
+            pickle.dump(dataset_split.encoder, f)
+            print('end')
         with open('{}/{}_{}_{}_{}_w2v.p'.format(args.data_dir, args.task, args.data, args.social_dim, split), 'wb') as f:
             print('start')
             pickle.dump(dataset_split, f)
