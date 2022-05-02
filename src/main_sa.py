@@ -45,6 +45,8 @@ def main():
     with open('{}/sa_{}_{}_test_w2v.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         test_dataset = pickle.load(f)
 
+    print("Henrique: " + str(len(train_dataset)))
+
     print('Lambda a: {:.0e}'.format(args.lambda_a))
     print('Lambda w: {:.0e}'.format(args.lambda_w))
     print('Social embeddings dimensionality: {}'.format(args.social_dim))
