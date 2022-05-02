@@ -127,7 +127,7 @@ class SADataset(Dataset):
             for rev in reviews:
                 tokens = rev.lower().replace('!', ' ').replace('?', ' ').replace('.', ' ')
                 if (prints < 450):
-                    print("tokens: " + str(len(tokens)))
+                    print("tokens: " + str(len(tokens) + str(tokens)))
                     prints += 1
                 tokens_list = utils.simple_preprocess(tokens)
                 if (prints < 450):
