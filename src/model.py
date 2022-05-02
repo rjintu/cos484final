@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
-from transformers import BertModel, BertForMaskedLM
+from transformers import BertModel, BertForMaskedLM, BertTokenizer
 from gensim.models import Word2Vec
 
 from data_helpers import isin
@@ -141,7 +141,7 @@ class SAModel(nn.Module):
 
 
         # Retrieve BERT input embeddings
-        w2v_embs = torch.tensor([self.vecs[tok] for tok in reviews])
+        w2v_embs = [self.vecs[tok] for tok in BertTokenizer.convert_ids_to_tokens(reviews)]
         offset_last = torch.cat(
             [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0

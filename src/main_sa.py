@@ -36,13 +36,13 @@ def main():
     args = parser.parse_args()
 
     print('Load training data...')
-    with open('{}/sa_{}_{}_train_w2v.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
+    with open('{}/sa_{}_{}_train_bert.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         train_dataset = pickle.load(f)
     print('Load development data...')
-    with open('{}/sa_{}_{}_dev_w2v.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
+    with open('{}/sa_{}_{}_dev_bert.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         dev_dataset = pickle.load(f)
     print('Load test data...')
-    with open('{}/sa_{}_{}_test_w2v.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
+    with open('{}/sa_{}_{}_test_bert.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         test_dataset = pickle.load(f)
 
     print("Henrique: " + str(len(train_dataset)))

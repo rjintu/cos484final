@@ -113,8 +113,8 @@ class SADataset(Dataset):
         filter_list = [w for w in w_top if w not in stops and w in self.tok.vocab and w.isalpha()]
         self.filter_tensor = torch.tensor([t for t in self.tok.encode(filter_list) if t >= 2100])
 
-        #self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
-        #self.reviews = truncate(self.reviews)
+        self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
+        self.reviews = truncate(self.reviews)
 
         le = preprocessing.LabelEncoder()
 
