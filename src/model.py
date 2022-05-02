@@ -141,24 +141,24 @@ class SAModel(nn.Module):
 
 
         # Retrieve BERT input embeddings
-        bert_embs = torch.tensor([self.vecs[tok] for tok in reviews])
+        w2v_embs = torch.tensor([self.vecs[tok] for tok in reviews])
         offset_last = torch.cat(
-            [self.social_components[j](bert_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
+            [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
         )
         offset_now = torch.cat(
-            [self.social_components[j](bert_embs[i], users[i], g_data) for i, j in enumerate(times)],
+            [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(times)],
             dim=0
         )
         offset_last = offset_last * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
         offset_now = offset_now * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
 
         # Compute dynamic type-level embeddings (input to contextualizing component)
-        input_embs = bert_embs + offset_now
+        input_embs = w2v_embs + offset_now
 
         # Only compute dynamic type-level embeddings (not fed into contextualizing component)
         if embs_only:
-            return bert_embs, input_embs
+            return w2v_embs, input_embs
 
         # Pass through contextualizing component
         output_bert = self.dropout(input_embs)
