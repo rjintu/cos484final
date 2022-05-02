@@ -119,7 +119,7 @@ class SAModel(nn.Module):
         """
 
         super(SAModel, self).__init__()
-        self.vecs = Word2Vec.load("word2vec.model").wv
+        self.vecs = Word2Vec.load("/content/drive/MyDrive/cos484final/models/word2vec_768/word2vec.model").wv
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
