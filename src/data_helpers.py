@@ -118,8 +118,10 @@ class SADataset(Dataset):
         review_tokens = []
         for review in data.text:
             processed_review = utils.simple_preprocess(review.lower().replace('!', ' ').replace('?', ' ').replace('.', ' '))
+            individual_review_tokens = []
             for tok in processed_review:
-                review_tokens.append(tok)
+                individual_review_tokens.append(tok)
+            review_tokens.append[individual_review_tokens]
 
         self.reviews = review_tokens
 
