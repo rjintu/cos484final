@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
 from transformers import BertTokenizer
+from gensim import utils
 
 stops = set(stopwords.words('english'))
 
@@ -111,8 +112,16 @@ class SADataset(Dataset):
         filter_list = [w for w in w_top if w not in stops and w in self.tok.vocab and w.isalpha()]
         self.filter_tensor = torch.tensor([t for t in self.tok.encode(filter_list) if t >= 2100])
 
-        self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
-        self.reviews = truncate(self.reviews)
+        #self.reviews = list(data.text.apply(self.tok.encode, add_special_tokens=True))
+        #self.reviews = truncate(self.reviews)
+
+        review_tokens = []
+        for rev in data.text:
+            tokens = rev.lower().replace('!', ' ').replace('?', ' ').replace('.', ' ').split(' ')
+            for tok in utils.simple_preprocess(tokens):
+                review_tokens.append(tok)
+
+        self.reviews = review_tokens
 
         self.user2id, self.graph_data = load_external_data(name, social_dim, data_dir)
 

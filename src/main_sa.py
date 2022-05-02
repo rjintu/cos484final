@@ -100,9 +100,6 @@ def main():
             masks = masks.to(device)
             segs = segs.to(device)
 
-            print(reviews.shape)
-            quit()
-
             optimizer.zero_grad()
 
             offset_t0, offset_t1, output = model(reviews, masks, segs, users, graph_data, times, vocab_filter)
