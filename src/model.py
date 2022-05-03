@@ -151,6 +151,11 @@ class SAModel(nn.Module):
                 i += 1
             else:
                 w2v_embs = torch.cat((w2v_embs, rev_embs), 0)
+            print('reviews device')
+            print(reviews.device)
+            w2v_embs = w2v_embs.to(reviews.device)
+            print(w2v_embs.device)
+            print('****')
         offset_last = torch.cat(
             [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
