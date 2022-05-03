@@ -258,39 +258,39 @@ class SABert(nn.Module):
 
     def __init__(self):
         super(SABert, self).__init__() 
-        # self.bert_old = KeyedVectors.load_word2vec_format("/content/drive/MyDrive/cos484final/models/gensim_glove_vectors.txt", binary=False)  # use this for GloVe!
-        # self.bert = torch.FloatTensor(self.bert_old.vectors)
+        self.bert_old = KeyedVectors.load_word2vec_format("/content/drive/MyDrive/cos484final/models/gensim_glove_vectors.txt", binary=False)  # use this for GloVe!
+        self.bert = torch.FloatTensor(self.bert_old.vectors)
         self.tok = BertTokenizer.from_pretrained('bert-base-uncased')
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        # self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, reviews, masks, segs):
-        output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
+        # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         # output_bert = self.dropout(self.bert)
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         print("Reviews")
         print(reviews.shape)
-        # x, y = reviews.shape
-        # for i in range(x):
-        #     avg = torch.empty((1, 768)).to(reviews.device)
-        #     for j in range(y):
-        #         word = self.tok.decode(reviews[i][j]).replace(" ", '')
-        #         # print(word)
-        #         if word in self.bert_old.key_to_index:
-        #             vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
-        #         else:
-        #             vec = torch.empty((1, 768)).to(reviews.device)
-        #         avg = (avg + vec) / (j + 1)
-        #     if i == 0:
-        #         veclist = avg.to(reviews.device)
-        #     else:
-        #         veclist = torch.cat((veclist, avg), 0).to(reviews.device)
+        x, y = reviews.shape
+        for i in range(x):
+            avg = torch.empty((1, 768)).to(reviews.device)
+            for j in range(y):
+                word = self.tok.decode(reviews[i][j]).replace(" ", '')
+                # print(word)
+                if word in self.bert_old.key_to_index:
+                    vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
+                else:
+                    vec = torch.empty((1, 768)).to(reviews.device)
+                avg = (avg + vec) / (j + 1)
+            if i == 0:
+                veclist = avg.to(reviews.device)
+            else:
+                veclist = torch.cat((veclist, avg), 0).to(reviews.device)
         
-        # print('veclist')
-        # print(veclist.shape)
-        # output_bert = self.dropout(veclist)
+        print('veclist')
+        print(veclist.shape)
+        output_bert = self.dropout(veclist)
         print('after dropout')
         print(output_bert.shape)
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
