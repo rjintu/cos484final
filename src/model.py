@@ -284,7 +284,7 @@ class SABert(nn.Module):
             if i == 0:
                 veclist = avg.to(reviews.device)
             else:
-                veclist = torch.cat((veclist, avg), 1).to(reviews.device)
+                veclist = torch.cat((veclist, avg), 0).to(reviews.device)
         
         print(veclist.shape)
             
