@@ -272,24 +272,24 @@ class SABert(nn.Module):
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         print("Reviews")
         print(reviews.shape)
-        x, y = reviews.shape
-        for i in range(x):
-            avg = torch.empty((1, 768)).to(reviews.device)
-            for j in range(y):
-                word = self.tok.decode(reviews[i][j]).replace(" ", '')
-                # print(word)
-                if word in self.bert_old.key_to_index:
-                    vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
-                else:
-                    vec = torch.empty((1, 768)).to(reviews.device)
-                avg = (avg + vec) / (j + 1)
-            if i == 0:
-                veclist = avg.to(reviews.device)
-            else:
-                veclist = torch.cat((veclist, avg), 0).to(reviews.device)
+        # x, y = reviews.shape
+        # for i in range(x):
+        #     avg = torch.empty((1, 768)).to(reviews.device)
+        #     for j in range(y):
+        #         word = self.tok.decode(reviews[i][j]).replace(" ", '')
+        #         # print(word)
+        #         if word in self.bert_old.key_to_index:
+        #             vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
+        #         else:
+        #             vec = torch.empty((1, 768)).to(reviews.device)
+        #         avg = (avg + vec) / (j + 1)
+        #     if i == 0:
+        #         veclist = avg.to(reviews.device)
+        #     else:
+        #         veclist = torch.cat((veclist, avg), 0).to(reviews.device)
         
-        print('veclist')
-        print(veclist.shape)
+        # print('veclist')
+        # print(veclist.shape)
         # output_bert = self.dropout(veclist)
         print('after dropout')
         print(output_bert.shape)
