@@ -260,6 +260,7 @@ class SABert(nn.Module):
         super(SABert, self).__init__() 
         self.bert_old = KeyedVectors.load_word2vec_format("/content/drive/MyDrive/cos484final/models/gensim_glove_vectors.txt", binary=False)  # use this for GloVe!
         self.bert = torch.FloatTensor(self.bert_old.vectors)
+        self.tok = BertTokenizer.from_pretrained('bert-base-uncased')
         # self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
@@ -269,7 +270,26 @@ class SABert(nn.Module):
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         # output_bert = self.dropout(self.bert)
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
-        output_bert = self.dropout(self.bert_old.get_vector(reviews))
+        x, y = reviews.shape
+        for i in range(x):
+            avg = torch.empty((1, 512))
+            for j in range(y):
+                word = self.tok.decode(reviews[i][j])
+                print(word)
+                if word in self.bert_old.vocab:
+                    vec = self.bert_old.get_vector(word)
+                else:
+                    vec = torch.empty((1, 512))
+                avg = (avg + vec) / (j + 1)
+            if i == 0:
+                veclist = avg 
+            else:
+                veclist = torch.cat((veclist, avg), 1)
+        
+        print(veclist.shape)
+            
+            
+        output_bert = self.dropout(veclist)
         print(output_bert.shape)
         print(reviews.shape)
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
