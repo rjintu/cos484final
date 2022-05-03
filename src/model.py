@@ -270,8 +270,8 @@ class SABert(nn.Module):
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         # output_bert = self.dropout(self.bert)
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
-        print("Reviews")
-        print(reviews.shape)
+        # print("Reviews")
+        # print(reviews.shape)
         x, y = reviews.shape
         for i in range(x):
             avg = torch.empty((1, 768)).to(reviews.device)
@@ -288,11 +288,11 @@ class SABert(nn.Module):
             else:
                 veclist = torch.cat((veclist, avg), 0).to(reviews.device)
         
-        print('veclist')
-        print(veclist.shape)
+        # print('veclist')
+        # print(veclist.shape)
         output_bert = self.dropout(veclist)
-        print('after dropout')
-        print(output_bert.shape)
+        # print('after dropout')
+        # print(output_bert.shape)
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
         return output
