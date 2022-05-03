@@ -102,6 +102,7 @@ def main():
             reviews = reviews.to(device)
             masks = masks.to(device)
             segs = segs.to(device)
+            times = times.to(device)
 
             optimizer.zero_grad()
 
