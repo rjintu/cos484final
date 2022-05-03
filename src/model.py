@@ -277,7 +277,7 @@ class SABert(nn.Module):
                 word = self.tok.decode(reviews[i][j]).replace(" ", '')
                 print(word)
                 if word in self.bert_old.key_to_index:
-                    vec = self.bert_old.get_vector(word).to(reviews.device)
+                    vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
                 else:
                     vec = torch.empty((1, 768)).to(reviews.device)
                 avg = (avg + vec) / (j + 1)
