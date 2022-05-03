@@ -155,6 +155,7 @@ class SAModel(nn.Module):
         print(reviews.device)
         w2v_embs = w2v_embs.to(reviews.device)
         print(w2v_embs.device)
+        print(w2v_embs.shape)
         print('****')
         offset_last = torch.cat(
             [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
@@ -198,6 +199,8 @@ class SocialComponent(nn.Module):
         print('forward: print statements. SA component')
         print(embs.device)
         print(user_output.device)
+        print(embs.shape)
+        print(user_output.shape)
         h = torch.cat((embs, user_output), dim=-1)
         h = self.dropout(torch.tanh(self.linear_1(h)))
         offset = self.linear_2(h).unsqueeze(0)
