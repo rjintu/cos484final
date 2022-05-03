@@ -266,7 +266,8 @@ class SABert(nn.Module):
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, reviews, masks, segs):
-        output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
+        # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
+        output_bert = self.dropout(self.bert)
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
