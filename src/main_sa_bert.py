@@ -32,13 +32,13 @@ def main():
     args = parser.parse_args()
 
     print('Load training data...')
-    with open('{}/sa_{}_50_train.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_train_bert.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         train_dataset = pickle.load(f)
     print('Load development data...')
-    with open('{}/sa_{}_50_dev.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_dev_bert.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         dev_dataset = pickle.load(f)
     print('Load test data...')
-    with open('{}/sa_{}_50_test.p'.format(args.data_dir, args.data), 'rb') as f:
+    with open('{}/sa_{}_{}_test_bert.p'.format(args.data_dir, args.data, args.social_dim), 'rb') as f:
         test_dataset = pickle.load(f)
 
     collator = SACollator(train_dataset.user2id)
