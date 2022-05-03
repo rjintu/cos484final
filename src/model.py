@@ -5,6 +5,7 @@ from torch.nn import functional as F
 from torch_geometric.nn import GCNConv, GATConv
 from transformers import BertModel, BertForMaskedLM, BertTokenizer
 from gensim.models import Word2Vec
+from gensim.models.keyedvectors import KeyedVectors
 
 from data_helpers import isin
 
@@ -120,7 +121,10 @@ class SAModel(nn.Module):
         """
 
         super(SAModel, self).__init__()
-        self.vecs = Word2Vec.load("/content/drive/MyDrive/cos484final/models/word2vec_768/word2vec.model").wv
+
+
+        self.vecs = KeyedVectors.load_word2vec_format("gensim_glove_vectors.txt", binary=False) # use this for GloVe!
+        # self.vecs = Word2Vec.load("/content/drive/MyDrive/cos484final/models/word2vec_768/word2vec.model").wv
         self.social_components = nn.ModuleList([SocialComponent(social_dim, gnn) for _ in range(n_times)])
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
