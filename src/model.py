@@ -275,7 +275,7 @@ class SABert(nn.Module):
             avg = torch.empty((1, 768)).to(reviews.device)
             for j in range(y):
                 word = self.tok.decode(reviews[i][j]).replace(" ", '')
-                print(word)
+                # print(word)
                 if word in self.bert_old.key_to_index:
                     vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
                 else:
