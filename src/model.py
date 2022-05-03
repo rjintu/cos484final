@@ -260,15 +260,18 @@ class SABert(nn.Module):
         super(SABert, self).__init__() 
         self.bert_old = KeyedVectors.load_word2vec_format("/content/drive/MyDrive/cos484final/models/gensim_glove_vectors.txt", binary=False)  # use this for GloVe!
         self.bert = torch.FloatTensor(self.bert_old.vectors)
-        # self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.linear_1 = nn.Linear(768, 100)
         self.linear_2 = nn.Linear(100, 1)
         self.dropout = nn.Dropout(0.2)
 
     def forward(self, reviews, masks, segs):
+        output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
+        # output_bert = self.dropout(self.bert)
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
-        output_bert = self.dropout(self.bert)
-        # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
+        print(output_bert.shape)
+        print(reviews.shape)
+        print(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1].shape)
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
         return output
