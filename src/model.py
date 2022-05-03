@@ -276,7 +276,7 @@ class SABert(nn.Module):
             for j in range(y):
                 word = self.tok.decode(reviews[i][j])
                 print(word)
-                if word in self.bert_old.vocab:
+                if word in self.bert_old.key_to_index:
                     vec = self.bert_old.get_vector(word)
                 else:
                     vec = torch.empty((1, 512))
