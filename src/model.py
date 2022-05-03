@@ -272,14 +272,14 @@ class SABert(nn.Module):
         # output_bert = self.dropout(self.bert(reviews, attention_mask=masks, token_type_ids=segs)[1])
         x, y = reviews.shape
         for i in range(x):
-            avg = torch.empty((1, 512))
+            avg = torch.empty((1, 768))
             for j in range(y):
-                word = self.tok.decode(reviews[i][j])
+                word = self.tok.decode(reviews[i][j]).replace(" ", '')
                 print(word)
                 if word in self.bert_old.key_to_index:
                     vec = self.bert_old.get_vector(word)
                 else:
-                    vec = torch.empty((1, 512))
+                    vec = torch.empty((1, 768))
                 avg = (avg + vec) / (j + 1)
             if i == 0:
                 veclist = avg 
