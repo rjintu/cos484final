@@ -258,7 +258,7 @@ class SABert(nn.Module):
 
     def __init__(self):
         super(SABert, self).__init__() 
-        self.bert_old = KeyedVectors.load_word2vec_format("/content/drive/MyDrive/cos484final/models/gensim_glove_vectors.txt", binary=False)  # use this for GloVe!
+        self.bert_old = Word2Vec.load("/content/drive/MyDrive/cos484final/models/word2vec_768/word2vec_768.model").wv
         self.bert = torch.FloatTensor(self.bert_old.vectors)
         self.tok = BertTokenizer.from_pretrained('bert-base-uncased')
         # self.bert = BertModel.from_pretrained('bert-base-uncased')
