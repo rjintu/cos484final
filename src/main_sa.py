@@ -63,6 +63,7 @@ def main():
     filename += '_{}'.format(args.social_dim)
 
     device = torch.device('cuda:{}'.format(args.device) if torch.cuda.is_available() else 'cpu')
+    print(device)
 
     model = SAModel(
         n_times=train_dataset.n_times,

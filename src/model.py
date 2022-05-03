@@ -190,7 +190,6 @@ class SocialComponent(nn.Module):
     def forward(self, embs, users, graph_data):
         user_output = self.gnn_component(users, graph_data)
         user_output = user_output.unsqueeze(0).expand(embs.size(0), -1)
-        user_output = user_output.to(embs.device)
         h = torch.cat((embs, user_output), dim=-1)
         h = self.dropout(torch.tanh(self.linear_1(h)))
         offset = self.linear_2(h).unsqueeze(0)
