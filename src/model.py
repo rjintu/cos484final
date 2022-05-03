@@ -144,23 +144,32 @@ class SAModel(nn.Module):
             embs_only: only compute dynamic type-level embeddings
         """
 
-        print(reviews.shape)
+        # print(reviews.shape)
         # Retrieve BERT input embeddings
-        tokenizer = BertTokenizer.from_pretrained('distilbert-base-uncased')
-        i = 0
-        for rev in reviews:
-            rev_embs = torch.tensor([self.vecs[tok] for tok in tokenizer.convert_ids_to_tokens(ids=rev) if tok in self.vecs])
+        self.tok = BertTokenizer.from_pretrained('distilbert-base-uncased')
+
+        x, y = reviews.shape
+        for i in range(x):
+            avg = torch.empty((1, 768)).to(reviews.device)
+            for j in range(y):
+                word = self.tok.decode(reviews[i][j]).replace(" ", '')
+                # print(word)
+                if word in self.bert_old.key_to_index:
+                    vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
+                else:
+                    vec = torch.empty((1, 768)).to(reviews.device)
+                avg = (avg + vec) / (j + 1)
             if i == 0:
-                w2v_embs = rev_embs
-                i += 1
+                veclist = avg.to(reviews.device)
             else:
-                w2v_embs = torch.cat((w2v_embs, rev_embs), 0)
-        print('reviews device')
-        print(reviews.device)
-        w2v_embs = w2v_embs.to(reviews.device)
-        print(w2v_embs.device)
-        print(w2v_embs.shape)
-        print('****')
+                veclist = torch.cat((veclist, avg), 0).to(reviews.device)
+        
+        print('veclist')
+        print(veclist.shape)
+        output_bert = self.dropout(veclist)
+        print('after dropout')
+        print(output_bert.shape)
+
         offset_last = torch.cat(
             [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
@@ -172,17 +181,23 @@ class SAModel(nn.Module):
         offset_last = offset_last * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
         offset_now = offset_now * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
 
+        print("Offset")
+        print(offset_now.shape)
+
         # Compute dynamic type-level embeddings (input to contextualizing component)
-        input_embs = w2v_embs + offset_now
+        input_embs = output_bert + offset_now
 
         # Only compute dynamic type-level embeddings (not fed into contextualizing component)
         if embs_only:
             return w2v_embs, input_embs
 
-        # Pass through contextualizing component
-        output_bert = self.dropout(input_embs)
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
+
+        # Pass through contextualizing component
+        # output_bert = self.dropout(input_embs)
+        # h = self.dropout(torch.tanh(self.linear_1(output_bert)))
+        # output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
 
         return offset_last, offset_now, output
 
