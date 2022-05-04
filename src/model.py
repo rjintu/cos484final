@@ -150,7 +150,6 @@ class SAModel(nn.Module):
 
         x, y = reviews.shape
         for i in range(x):
-            avg = torch.empty((1, 768)).to(reviews.device)
             for j in range(y):
                 word = self.tok.decode(reviews[i][j]).replace(" ", '')
                 # print(word)
@@ -158,11 +157,10 @@ class SAModel(nn.Module):
                     vec = torch.from_numpy(self.vecs.get_vector(word)).to(reviews.device)
                 else:
                     vec = torch.empty((1, 768)).to(reviews.device)
-                avg = (avg + vec) / (j + 1)
             if i == 0:
-                veclist = avg.to(reviews.device)
+                veclist = vec
             else:
-                veclist = torch.cat((veclist, avg), 0).to(reviews.device)
+                veclist = torch.cat((veclist, vec), 0).to(reviews.device)
         
         print('veclist')
         print(veclist.shape)
@@ -215,11 +213,11 @@ class SocialComponent(nn.Module):
     def forward(self, embs, users, graph_data):
         user_output = self.gnn_component(users, graph_data)
         user_output = user_output.unsqueeze(0).expand(embs.size(0), -1)
-        print('forward: print statements. SA component')
-        print(embs.device)
-        print(user_output.device)
-        print(embs.shape)
-        print(user_output.shape)
+        # print('forward: print statements. SA component')
+        # print(embs.device)
+        # print(user_output.device)
+        # print(embs.shape)
+        # print(user_output.shape)
         h = torch.cat((embs, user_output), dim=-1)
         h = self.dropout(torch.tanh(self.linear_1(h)))
         offset = self.linear_2(h).unsqueeze(0)
