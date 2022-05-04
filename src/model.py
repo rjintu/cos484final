@@ -157,10 +157,14 @@ class SAModel(nn.Module):
                     vec = torch.from_numpy(self.vecs.get_vector(word)).to(reviews.device)
                 else:
                     vec = torch.empty((1, 768)).to(reviews.device)
+                if j == 0:
+                    w = vec
+                else:
+                    w = torch.cat((veclist, vec), 0).to(reviews.device)
             if i == 0:
-                veclist = vec
+                veclist = w
             else:
-                veclist = torch.cat((veclist, vec), 0).to(reviews.device)
+                veclist = torch.cat((three, w), 0).to(reviews.device)
         
         print('veclist')
         print(veclist.shape)
