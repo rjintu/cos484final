@@ -155,7 +155,7 @@ class SAModel(nn.Module):
                 word = self.tok.decode(reviews[i][j]).replace(" ", '')
                 # print(word)
                 if word in self.vecs.key_to_index:
-                    vec = torch.from_numpy(self.bert_old.get_vector(word)).to(reviews.device)
+                    vec = torch.from_numpy(self.vecs.get_vector(word)).to(reviews.device)
                 else:
                     vec = torch.empty((1, 768)).to(reviews.device)
                 avg = (avg + vec) / (j + 1)
