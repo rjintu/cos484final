@@ -171,11 +171,11 @@ class SAModel(nn.Module):
         print(output_bert.shape)
 
         offset_last = torch.cat(
-            [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
+            [self.social_components[j](veclist[i], users[i], g_data) for i, j in enumerate(F.relu(times - 1))],
             dim=0
         )
         offset_now = torch.cat(
-            [self.social_components[j](w2v_embs[i], users[i], g_data) for i, j in enumerate(times)],
+            [self.social_components[j](veclist[i], users[i], g_data) for i, j in enumerate(times)],
             dim=0
         )
         offset_last = offset_last * isin(reviews, vocab_filter).float().unsqueeze(-1).expand(-1, -1, 768)
@@ -189,7 +189,7 @@ class SAModel(nn.Module):
 
         # Only compute dynamic type-level embeddings (not fed into contextualizing component)
         if embs_only:
-            return w2v_embs, input_embs
+            return veclist, input_embs
 
         h = self.dropout(torch.tanh(self.linear_1(output_bert)))
         output = torch.sigmoid(self.linear_2(h)).squeeze(-1)
